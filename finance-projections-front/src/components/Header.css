@@ -1,0 +1,45 @@
+/* Header principal que ocupa a largura total da tela */
+.header-wrapper {
+    background-color: #1E3A8A; /* Dark Blue */
+    width: 100%; /* Ocupa a largura total da tela */
+    padding: 10px 0;
+  }
+  
+  /* Contêiner interno que limita a largura */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* Limita a largura máxima dos elementos */
+    margin: 0 auto; /* Centraliza o conteúdo interno */
+    padding: 0 20px; /* Espaçamento interno */
+  }
+  
+  /* Logo */
+  .header__logo {
+    margin-right: auto; /* Garante que o logo fique à esquerda */
+  }
+  
+  .header__logo h1 {
+    color: #FFFFFF; /* White */
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  
+  /* Ícones */
+  .header__icons {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaço entre os ícones */
+  }
+  
+  .header__icon {
+    color: #FFFFFF; /* White */
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+  
+  .header__icon:hover {
+    color: #3B82F6; /* Light Blue */
+  }
+  
