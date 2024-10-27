@@ -23,7 +23,6 @@
   }
   
   .search-bar {
-    width: 40%; /* Ajuste para um tamanho mais minimalista */
     padding: 12px;
     border-radius: 25px;
     border: 1px solid #ddd;
@@ -160,3 +159,50 @@
   }
   
   
+  .search-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+  }
+  
+  .search-result-item strong {
+    font-size: 1rem;
+    color: #000;
+  }
+  
+  .search-result-item .empresa {
+    font-size: 0.85rem;
+    color: #777;
+  }
+  
+  .search-result-item .valor {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    text-align: right;
+  }
+  
+  .search-result-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .result-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .result-link div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .valor {
+    min-width: 100px;
+  }

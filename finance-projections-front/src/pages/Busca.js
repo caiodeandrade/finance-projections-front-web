@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import './Busca.css';
 
 const Busca = () => {
@@ -59,19 +60,26 @@ const Busca = () => {
     <div className="busca">
       <div className="search-subheader">
         <h1>Pesquise pelo ativo desejado para ter acesso a cotações, fundamentos e gráficos</h1>
-        <div className="search-container">
-          <Input
-            type="text"
-            placeholder="Pesquise pelo ativo desejado"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-bar"
-          />
-          <Button color="primary" onClick={() => handleSearch(searchTerm)} className="search-btn">
-            PESQUISAR
-          </Button>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-md-11"> {/* Limita a largura do search-container no tamanho md */}
+              <div className="search-container">
+                <Input
+                  type="text"
+                  placeholder="Pesquise pelo ativo desejado"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-bar"
+                />
+                <Button color="primary" onClick={() => handleSearch(searchTerm)} className="search-btn">
+                  PESQUISAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
 
       {!isSearching ? (
         <div className="curiosity-section">
@@ -130,11 +138,13 @@ const Busca = () => {
               )
               .map((ativo) => (
                 <li key={ativo.id} className="search-result-item">
-                  <div>
-                    <strong>{ativo.nome}</strong>
-                    <span className="empresa">{ativo.empresa}</span>
-                  </div>
-                  <div className="valor">{ativo.valor}</div>
+                  <Link to={`/ativo/${ativo.nome}`} className="result-link">
+                    <div>
+                      <strong>{ativo.nome}</strong>
+                      <span className="empresa">{ativo.empresa}</span>
+                    </div>
+                    <div className="valor">{ativo.valor}</div>
+                  </Link>
                 </li>
               ))}
           </ul>
