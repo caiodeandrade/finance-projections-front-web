@@ -11,7 +11,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/busca" element={<Busca />} />
-        <Route path="/ativo/:ticker" element={<Ativo />} /> 
+        <Route path="/ativo/:ticker" element={<Ativo />} />
         <Route path="/carteira" element={<Carteira />} />
       </Routes>
     </Router>

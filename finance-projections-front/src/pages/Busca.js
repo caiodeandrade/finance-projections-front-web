@@ -62,7 +62,7 @@ const Busca = () => {
         <h1>Pesquise pelo ativo desejado para ter acesso a cotações, fundamentos e gráficos</h1>
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-md-11"> {/* Limita a largura do search-container no tamanho md */}
+            <div className="col-md-11">
               <div className="search-container">
                 <Input
                   type="text"
@@ -79,7 +79,6 @@ const Busca = () => {
           </div>
         </div>
       </div>
-
 
       {!isSearching ? (
         <div className="curiosity-section">
@@ -138,7 +137,11 @@ const Busca = () => {
               )
               .map((ativo) => (
                 <li key={ativo.id} className="search-result-item">
-                  <Link to={`/ativo/${ativo.nome}`} className="result-link">
+                  <Link
+                    to={`/ativo/${ativo.nome}`}
+                    state={{ price: ativo.valor }}
+                    className="result-link"
+                  >
                     <div>
                       <strong>{ativo.nome}</strong>
                       <span className="empresa">{ativo.empresa}</span>
