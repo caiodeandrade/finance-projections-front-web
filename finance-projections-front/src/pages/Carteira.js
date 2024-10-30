@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import api from '../api'; // Importa o axios com a baseURL já configurada
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement, // Importado para suportar gráficos de barras
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -15,15 +16,33 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Importa o CSS do Bootstrap
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement, // Registrado para permitir gráficos de barras
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
 const Carteira = () => {
-  // Mock data para demonstração. Substitua por dados reais conforme necessário
-  const patrimonioAtual = 25000.75; // Patrimônio atual do usuário
+  const [patrimonioAtual, setPatrimonioAtual] = useState(0);
+
+  useEffect(() => {
+    const fetchPatrimonio = async () => {
+      try {
+        const response = await api.get('wallet/3'); 
+        const { totalInvested } = response.data; 
+
+        console.log(totalInvested);
+
+        setPatrimonioAtual(totalInvested);
+
+
+      } catch (error) {
+        console.error('Erro ao buscar o patrimônio:', error);
+      }
+    };
+
+    fetchPatrimonio();
+  }, []);
 
   // Dados para o gráfico de Barras (Patrimônio dos Últimos 6 Meses)
   const patrimonioData = useMemo(() => ({
@@ -31,7 +50,7 @@ const Carteira = () => {
     datasets: [
       {
         label: 'Patrimônio (R$)',
-        data: [20000, 21000, 22000, 23000, 24000, 25000],
+        data: [20000, 21000, 22000, 23000, 24000, 30340.3], // Mock data
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,

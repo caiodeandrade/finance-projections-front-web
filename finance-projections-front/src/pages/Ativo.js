@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
+import api from '../api'; // Importa o axios com a baseURL já configurada
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,8 +29,24 @@ const Ativo = () => {
   const { ticker } = useParams();
   const location = useLocation();
 
-  // Recebe o preço passado pelo state do Link
-  const currentPrice = location.state?.price || 'N/A'; // Caso o preço não seja passado, mostra 'N/A'
+  // Estado para armazenar o preço atual do ativo
+  const [currentPrice, setCurrentPrice] = useState('N/A');
+
+  // Função para buscar o preço do ativo pela API
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        // Supondo que sua API tenha um endpoint que retorne o preço de um ativo específico
+        const response = await api.get(`/asset/${ticker}`); // Exemplo de endpoint
+        const { preco } = response.data; // Supondo que o campo seja 'preco'
+        setCurrentPrice(preco);
+      } catch (error) {
+        console.error('Erro ao buscar o preço do ativo:', error);
+      }
+    };
+
+    fetchPrice();
+  }, [ticker]);
 
   // Importar imagens dinamicamente
   let macdImage, bollingerImage, rsiImage;
@@ -97,7 +114,7 @@ const Ativo = () => {
           <div className="d-flex justify-content-center align-items-center">
             <div>
               <h1>
-                {ticker}: {currentPrice}
+                {ticker}: {currentPrice !== 'N/A' ? `R$ ${currentPrice}` : 'N/A'}
               </h1>
             </div>
           </div>
