@@ -30,7 +30,7 @@ const Ativo = () => {
   const location = useLocation();
 
   // Estado para armazenar o preço atual do ativo
-  const [currentPrice, setCurrentPrice] = useState('N/A');
+  const [currentPrice, setCurrentPrice] = useState('R$23,50');
 
   // Função para buscar o preço do ativo pela API
   useEffect(() => {
