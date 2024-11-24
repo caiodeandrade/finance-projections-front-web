@@ -77,9 +77,22 @@ const Ativo = () => {
     fetchAssetData();
   }, [ticker]);
 
-  const handleAddToPortfolio = () => {
-    console.log(`${ticker} adicionado à carteira!`);
-    alert(`${ticker} foi adicionado à sua carteira.`);
+  const handleAddToPortfolio = async () => {
+    try {
+      const response = await api.patch(`/wallet/2`, {
+        assets: [
+          {
+            ticker: ticker,
+            quantity: 1,
+          },
+        ],
+      });
+      console.log(response.data);
+      alert(`${ticker} foi adicionado à sua carteira.`);
+    } catch (error) {
+      console.error('Erro ao adicionar o ativo à carteira:', error);
+      alert('Ocorreu um erro ao adicionar o ativo à carteira.');
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Bar, Pie } from 'react-chartjs-2'; // Importando o componente Pie para o gráfico de pizza
+import { Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,9 +9,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement, // Para o gráfico de pizza
+  ArcElement,
 } from 'chart.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'; // Para realizar requisições HTTP
 
 ChartJS.register(
   CategoryScale,
@@ -20,27 +21,45 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement // Registrando o ArcElement para o gráfico de pizza
+  ArcElement
 );
 
 const Carteira = () => {
+  const [ativos, setAtivos] = useState([]);
   const [patrimonioAtual, setPatrimonioAtual] = useState(0);
 
-  // Mock dos ativos da carteira
-  const ativos = [
-    { id: 1, nome: 'PETR4', valor: 29.5 },
-    { id: 2, nome: 'VALE3', valor: 80.1 },
-    { id: 3, nome: 'ITUB4', valor: 22.3 },
-    { id: 4, nome: 'BBDC4', valor: 15.6 },
-    { id: 5, nome: 'BBAS3', valor: 43.2 },
-    { id: 6, nome: 'ABEV3', valor: 17.5 },
-  ];
-
   useEffect(() => {
-    // Calculando o patrimônio total
-    const total = ativos.reduce((acc, ativo) => acc + ativo.valor, 0);
-    setPatrimonioAtual(total);
-  }, [ativos]);
+    // Função para buscar dados da API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'https://finance-api-silk-five.vercel.app/wallet/2'
+        );
+        const wallet = response.data;
+
+        // Transformando os dados recebidos
+        const ativosFormatados = wallet.assets.map((item) => ({
+          id: item.id,
+          nome: item.asset.ticker,
+          valor: item.asset.price * item.quantity, // Calcula o valor total do ativo
+        }));
+
+        // Atualiza o estado com os ativos formatados
+        setAtivos(ativosFormatados);
+
+        // Calcula e define o patrimônio atual
+        const totalPatrimonio = ativosFormatados.reduce(
+          (acc, ativo) => acc + ativo.valor,
+          0
+        );
+        setPatrimonioAtual(totalPatrimonio);
+      } catch (error) {
+        console.error('Erro ao buscar dados da API:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Dados para o gráfico de Barras
   const patrimonioData = useMemo(
@@ -49,7 +68,7 @@ const Carteira = () => {
       datasets: [
         {
           label: 'Patrimônio (R$)',
-          data: [20000, 21000, 22000, 23000, 24000, patrimonioAtual],
+          data: [0, 0, 0, 0, 0, patrimonioAtual],
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1,
@@ -125,7 +144,10 @@ const Carteira = () => {
         <div className="container-md">
           <div className="d-flex justify-content-center align-items-center">
             <div>
-              <strong>Patrimônio Atual:</strong> R$ {patrimonioAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              <strong>Patrimônio Atual:</strong> R${' '}
+              {patrimonioAtual.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+              })}
             </div>
           </div>
         </div>
@@ -135,7 +157,8 @@ const Carteira = () => {
       <div className="container-md carteira mt-4">
         <h1 className="text-center mb-4">Minha Carteira</h1>
         <p className="text-center">
-          Bem-vindo à página de Carteira. Aqui você pode visualizar informações sobre sua carteira.
+          Bem-vindo à página de Carteira. Aqui você pode visualizar informações
+          sobre sua carteira.
         </p>
 
         {/* Gráfico de Barras */}
@@ -157,7 +180,9 @@ const Carteira = () => {
           <div className="col-md-8">
             <div className="card my-4">
               <div className="card-body">
-                <h5 className="card-title text-center">Distribuição de Ativos</h5>
+                <h5 className="card-title text-center">
+                  Distribuição de Ativos
+                </h5>
                 <div
                   className="d-flex justify-content-center"
                   style={{ height: '400px' }}
@@ -169,7 +194,6 @@ const Carteira = () => {
           </div>
         </div>
 
-
         {/* Lista de Ativos */}
         <div className="row justify-content-center">
           <div className="col-md-8">
@@ -178,14 +202,19 @@ const Carteira = () => {
                 <h5 className="card-title">Ativos da Carteira</h5>
                 <ul className="list-group">
                   {ativos.map((ativo) => (
-                    <li key={ativo.id} className="list-group-item d-flex justify-content-between align-items-center">
+                    <li
+                      key={ativo.id}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
                       <Link
                         to={`/ativo/${ativo.nome}`}
                         className="text-decoration-none text-dark flex-grow-1 text-start"
                       >
                         {ativo.nome}
                       </Link>
-                      <span className="badge bg-primary text-white">{ativo.valor}</span>
+                      <span className="badge bg-primary text-white">
+                        R$ {ativo.valor.toFixed(2)}
+                      </span>
                     </li>
                   ))}
                 </ul>
